@@ -10,8 +10,8 @@ interface PersonRepository : CrudRepository<Person, Long> {}
 
 interface LocationRepository: JpaRepository<Location, Long> {
     @Query(
-        value = "SELECT * FROM LOCATION WHERE longitude >= ?1 AND longitude <= ?2 AND latitude >= ?3 AND latitude <= ?4",
+        value = "SELECT * FROM LOCATION WHERE (POWER(ABS(longitude - ?1), 2) + POWER(ABS(latitude - ?2), 2)) <= ?3",
         nativeQuery = true
     )
-    fun findWithin(fromLongitude: Double, toLongitude: Double, fromLatitude: Double, toLatitude: Double): List<Location>
+    fun findWithin(long: Double, lat: Double, range: Double): List<Location>
 }

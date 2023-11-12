@@ -5,6 +5,8 @@ import com.persons.finder.LocationRepository
 import org.springframework.stereotype.Service
 import org.springframework.beans.factory.annotation.Autowired
 
+const val KM_IN_LONG_LAT = 111;
+
 @Service
 class LocationsServiceImpl : LocationsService {
 
@@ -20,17 +22,10 @@ class LocationsServiceImpl : LocationsService {
     }
 
     override fun findAround(latitude: Double, longitude: Double, radiusInKm: Double): List<Long> {
-        val dist = radiusInKm; //kmToLongLat(radiusInKm);
-
         return repository.findWithin(
-            longitude - dist,
-            longitude + dist,
-            latitude - dist,
-            latitude + dist
+            longitude,
+            latitude,
+            Math.pow(radiusInKm / KM_IN_LONG_LAT, 2.0)
         ).map({ it.referenceId })
-    }
-
-    fun kmToLongLat(km: Double): Double {
-        return km / 111;
     }
 }
